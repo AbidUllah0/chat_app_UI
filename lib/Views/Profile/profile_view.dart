@@ -5,6 +5,7 @@ import '../../Widgets/custom_text.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_images.dart';
 import '../Account/account_view.dart';
+import '../SendMessage/send_message.dart';
 import 'components/custom_list_tile.dart';
 
 class Profile extends StatelessWidget {
@@ -78,7 +79,14 @@ class Profile extends StatelessWidget {
                   height: 19.sp,
                 ),
                 CustomListTile(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SendMessage(),
+                      ),
+                    );
+                  },
                   circleAvatarIcon: Icons.people,
                   titleText: "Invite a friend",
                   subtitleText: "",

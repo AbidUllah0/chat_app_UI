@@ -1,15 +1,33 @@
 import 'package:chat_app2/Views/Profile/profile_view.dart';
+import 'package:chat_app2/Views/messages/components/message_input_textfield.dart';
 import 'package:chat_app2/Widgets/custom_text.dart';
-import 'package:chat_app2/Widgets/custom_textfield.dart';
 import 'package:chat_app2/utils/app_colors.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-
 import '../../model/messages_data.dart';
 
-class Messages extends StatelessWidget {
+class Messages extends StatefulWidget {
+  @override
+  State<Messages> createState() => _MessagesState();
+}
+
+class _MessagesState extends State<Messages> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void scrollToLatestMessage() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
   List<MessagesData> _data = [
     MessagesData(
         text: 'Hello! Jhon abraham', time: DateTime.now(), isSendByMe: true),
@@ -25,10 +43,31 @@ class Messages extends StatelessWidget {
         isSendByMe: false),
     MessagesData(
         text: 'Hope you like it', time: DateTime.now(), isSendByMe: false),
+    MessagesData(
+        text: 'Hello! Jhon abraham', time: DateTime.now(), isSendByMe: true),
+    MessagesData(
+        text: 'Have a great working week!!',
+        time: DateTime.now(),
+        isSendByMe: false),
+    MessagesData(
+        text: 'Hope you like it', time: DateTime.now(), isSendByMe: false),
+    MessagesData(
+        text: 'Hello! Jhon abraham', time: DateTime.now(), isSendByMe: true),
+    MessagesData(
+        text: 'Have a great working week!!',
+        time: DateTime.now(),
+        isSendByMe: false),
+    MessagesData(
+        text: 'Hope you like it', time: DateTime.now(), isSendByMe: false),
+    MessagesData(
+        text: 'Hello! Jhon abraham', time: DateTime.now(), isSendByMe: true),
   ];
 
   @override
   Widget build(BuildContext context) {
+    if (WidgetsBinding.instance.window.viewInsets.bottom > 0.0) {
+      scrollToLatestMessage();
+    } else {}
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.kWhiteColor,
@@ -43,27 +82,31 @@ class Messages extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => Profile(),
-                    ),
+                    MaterialPageRoute(builder: (context) => Profile()),
                   );
                 },
-                icon: Icon(
-                  Icons.account_circle_outlined,
-                  size: 40.sp,
-                  color: AppColors.kPrimaryColor,
-                ),
+                icon: Icon(Icons.account_circle_outlined,
+                    size: 40, color: AppColors.kPrimaryColor),
               ),
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-            child: Column(
-              children: [
-                ListView.builder(
+        bottomNavigationBar: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            margin: EdgeInsets.only(left: 13, right: 13),
+            height: 40.h,
+            child: MessageInputTextField(),
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  controller: scrollController,
                   shrinkWrap: true,
                   physics: BouncingScrollPhysics(),
                   itemCount: _data.length,
@@ -105,7 +148,6 @@ class Messages extends StatelessWidget {
                             text: DateFormat.jm().format(
                               DateFormat("hh:mm:ss").parse("14:15:00"),
                             ),
-
                             // text: '${currentTime.hour}:${currentTime.minute}'),
                           ),
                         ),
@@ -113,35 +155,8 @@ class Messages extends StatelessWidget {
                     );
                   },
                 ),
-                SizedBox(
-                  height: 150.h,
-                ),
-                Container(
-                  height: 40.h,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      hintText: 'Write Your Message',
-                      suffixIcon: Icon(
-                        Icons.send_sharp,
-                        color: AppColors.textGreyColor,
-                      ),
-                      fillColor: Color(0xffF3F6F6),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      border: InputBorder.none,
-                    ),
-                  ),
-                )
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
